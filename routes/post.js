@@ -3,6 +3,8 @@ const router = express.Router();
 
 
 const Post = require('../model/nftDetails');
+
+
 // get all the posts
 router.get('/',async(req,res)=>{
 try{

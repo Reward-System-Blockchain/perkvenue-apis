@@ -18,30 +18,18 @@ app.use(bodyParser.json());
 
 //Import Routes
 const postsRoute = require("./routes/post");
+const nftsRoute = require("./routes/nfts");
 
 app.use("/post", postsRoute);
+app.use("/nfts", nftsRoute);
+
 
 //Routes
 app.get("/", (req, res) => {
   res.send("We are on home");
 });
 
-app.post("/nfts/mint", async (req, res) => {
-  const { name, description, image, addressTo } = req.body;
 
-  try {
-    //Connect to DB
-    await mongoose
-      .connect(process.env.DB_CONNECTION)
-      .then(() => console.log("Connected to DB"));
-
-    const txHash = await mintNFT(name, description, image, addressTo);
-    res.json({ txHash });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
 
 //create a listening port
 const start = async () => {

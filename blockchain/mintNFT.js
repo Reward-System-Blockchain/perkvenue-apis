@@ -1,5 +1,7 @@
-const { NFTStorage } = require("nft.storage");
+const { NFTStorage ,File} = require("nft.storage");
+const axios = require('axios');
 const Web3 = require("web3");
+const fs = require("fs");
 // const fetch = require('node-fetch');
 const { Blob } = require('buffer');
 const { contractAddress, contractABI } = require("./constants");
@@ -13,15 +15,46 @@ async function uploadToIPFS(nftName, nftDescription, nftImage) {
 
     //   const response = await fetch(nftImage);
     //     const blob = await response.blob();
+    // fetch image data from URL
+    function getImageExtension(url) {
+      const parts = url.split('.');
+      return parts[parts.length - 1];
+    }
+    function generateRandomString(length) {
+      const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      return result;
+    }
 
-    const response = await fetch(nftImage);
-    const buffer = await response.buffer();
-    const blob = new Blob([buffer], { type: response.headers.get('content-type') });
+    const response = await axios.get(nftImage, {
+      responseType: 'arraybuffer'
+    });
+
+  // create File object from image data
+    const imageData = response.data;
+    const extension = getImageExtension(nftImage);
+    const filename = `${Date.now()}-${generateRandomString(8)}.${extension}`;
+    const file = new File([imageData], filename, {
+      type: "image/jpeg",
+    });
   
+    // const response = await fetch(nftImage);
+    // const buffer = await response.arrayBuffer();
+    // const file = new Blob([buffer], { type: "image/jpeg" });
+    // const blobUrl = URL.createObjectURL(file);
+    // console.log("blobUrl:",blobUrl);
+    // console.log("blob:",file);
+    
       const metadata = await client.store({
         name: nftName,
         description: nftDescription,
-        image: blob,
+        image: file,
+        // image: new File([await fs.promises.readFile("flowers.jpg")], "flowers.jpg", {
+        //   type: "image/jpeg",
+        // }),
       });
       let nftURI = "https://nftstorage.link/ipfs/" + metadata.url.slice(7);
       console.log("NFTuri:",nftURI);
@@ -91,8 +124,6 @@ const mintNFT = async (name, description, imageURL, addressTo) => {
     tokenURI: tokenURI,
     tokenAddress: contractAddress,
     txHash: txHash.transactionHash,
-    timestamp: new Date(),
-    _id: new ObjectID(),
   });
   return tokenId;
 };
