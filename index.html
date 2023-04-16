@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mint NFT</title>
+  </head>
+  <body>
+    <h1>Mint NFT</h1>
+    <form id="mintForm">
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" />
+      <br />
+      <label for="description">Description</label>
+      <input type="text" id="description" name="description" />
+      <br />
+      <label for="imageURL">Image URL</label>
+      <input type="text" id="imageURL" name="imageURL" />
+      <br />
+      <label for="addressTo">Recipient Address</label>
+      <input type="text" id="addressTo" name="addressTo" />
+      <br />
+      <button type="submit">Mint NFT</button>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      const mintForm = document.getElementById("mintForm");
+      mintForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const name = document.getElementById("name").value;
+        const description = document.getElementById("description").value;
+        const imageURL = document.getElementById("imageURL").value;
+        const addressTo = document.getElementById("addressTo").value;
+        console.log("hello");
+        console.log(name, description, imageURL, addressTo);
+
+        try {
+          const response = await fetch("http://localhost:3000/nfts/mint", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              
+            },
+            body: JSON.stringify({
+              name:name,
+              description:description,
+              image:imageURL,
+              addressTo:addressTo,
+            }),
+          });
+          console.log(response.data);
+          alert(`NFT minted! Token ID: ${response.data}`);
+        } catch (error) {
+          console.error(error);
+          alert("Error while minting NFT");
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -12,7 +12,11 @@ router.get('/',(req,res)=>{
     res.send('We are on nfts');
 });
 
-
+// router.options('/nfts/mint', (req, res) => {
+//   res.setHeader('Access-Control-Allow-Methods', 'POST');
+//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//   res.status(200).send();
+// });
 router.post("/mint", async (req, res) => {
     const { name, description, image, addressTo } = req.body;
   

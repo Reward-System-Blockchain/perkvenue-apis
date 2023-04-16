@@ -16,17 +16,34 @@ const { mintNFT } = require("./blockchain/mintNFT");
 //Middle ware
 app.use(bodyParser.json());
 
+const corsOpts = {
+  origin: '*',
+
+  methods: [
+    'GET',
+    'POST',
+  ],
+
+  allowedHeaders: [
+    'Content-Type',
+  ],
+};
+
+app.use(cors(corsOpts));
+
+// app.use(cors({
+//   origin: '*',
+//   methods: 'GET, POST, PUT, DELETE',
+//   allowedHeaders: 'Content-Type, Authorization, Origin, X-Requested-With, Accept',
+//   // credentials: true
+// }));
 //Import Routes
 const postsRoute = require("./routes/post");
 const nftsRoute = require("./routes/nfts");
 
 app.use("/post", postsRoute);
 app.use("/nfts", nftsRoute);
-app.use(cors({
-  origin: '*',
-  methods: 'GET, POST, PUT, DELETE',
-  allowedHeaders: 'Content-Type, Authorization'
-}));
+
 
 
 //Routes
