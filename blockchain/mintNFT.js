@@ -36,7 +36,7 @@ async function uploadToIPFS(nftName, nftDescription, nftImage) {
   // create File object from image data
     const imageData = response.data;
     const extension = getImageExtension(nftImage);
-    const filename = `${Date.now()}-${generateRandomString(8)}.${extension}`;
+    const filename = `image.${extension}`;
     const file = new File([imageData], filename, {
       type: "image/jpeg",
     });
@@ -90,32 +90,19 @@ const mintNFT = async (name, description, imageURL, addressTo) => {
     data: functionAbi,
   };
 
-  // Calculate gas fees
-  const gasFees = web3.utils.toBN(gasPrice).mul(web3.utils.toBN(gasLimit));
-
-  // Get sender's balance
-  const senderAddress = process.env.SENDER_ADDRESS;; // Replace with your address
-  const senderPrivateKey = process.env.PRIVATE_KEY; // Replace with your private key
-  const senderAccount = web3.eth.accounts.privateKeyToAccount(senderPrivateKey);
-  const senderBalance = await web3.eth.getBalance(senderAddress);
-
-  // Check if sender has enough balance to pay gas fees
-  if (gasFees.gt(senderBalance)) {
-    throw new Error("Insufficient balance to pay gas fees");
-  }
-
-  // Deduct gas fees from sender's balance
-  const updatedBalance = web3.utils.toBN(senderBalance).sub(gasFees);
-
-  const signedTx = await senderAccount.signTransaction({
-    ...tx,
-    gasPrice: web3.utils.toHex(gasPrice),
-    gasLimit: web3.utils.toHex(gasLimit),
-    value: web3.utils.toHex(updatedBalance),
+  const signedTx = await window.ethereum.request({
+    method: "eth_sendTransaction",
+    params: [
+      {
+        ...tx,
+        from: addressTo,
+        value: "0x0",
+      },
+    ],
   });
 
-  const txHash = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-  const tokenId = await txHash.events.Transfer.returnValues.tokenId;
+  const txReceipt = await web3.eth.getTransactionReceipt(signedTx);
+  const tokenId = web3.eth.abi.decodeParameter("uint256", txReceipt.logs[0].data);
 
   // ----------------MongoDB----------------------------//
   const result = await nftDetails.insertOne({
@@ -125,6 +112,7 @@ const mintNFT = async (name, description, imageURL, addressTo) => {
     tokenAddress: contractAddress,
     txHash: txHash.transactionHash,
   });
+  console.log(result);
   return tokenId;
 };
 
