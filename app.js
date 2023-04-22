@@ -40,9 +40,11 @@ app.use(cors(corsOpts));
 //Import Routes
 const postsRoute = require("./routes/post");
 const nftsRoute = require("./routes/nfts");
+const tokenRoute = require("./routes/token");
 
 app.use("/post", postsRoute);
 app.use("/nfts", nftsRoute);
+app.use("/token", tokenRoute);
 
 
 
