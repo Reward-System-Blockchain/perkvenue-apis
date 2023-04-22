@@ -90,30 +90,32 @@ const mintNFT = async (name, description, imageURL, addressTo) => {
     data: functionAbi,
   };
 
-  const signedTx = await window.ethereum.request({
-    method: "eth_sendTransaction",
-    params: [
-      {
-        ...tx,
-        from: addressTo,
-        value: "0x0",
-      },
-    ],
-  });
+  console.log("tx:",tx);
+  // const signedTx = await window.ethereum.request({
+  //   method: "eth_sendTransaction",
+  //   params: [
+  //     {
+  //       ...tx,
+  //       from: addressTo,
+  //       value: "0x0",
+  //     },
+  //   ],
+  // });
 
-  const txReceipt = await web3.eth.getTransactionReceipt(signedTx);
-  const tokenId = web3.eth.abi.decodeParameter("uint256", txReceipt.logs[0].data);
+  // const txReceipt = await web3.eth.getTransactionReceipt(signedTx);
+  // const tokenId = web3.eth.abi.decodeParameter("uint256", txReceipt.logs[0].data);
 
   // ----------------MongoDB----------------------------//
-  const result = await nftDetails.insertOne({
-    owner: addressTo,
-    tokenID: tokenId,
-    tokenURI: tokenURI,
-    tokenAddress: contractAddress,
-    txHash: txHash.transactionHash,
-  });
-  console.log(result);
-  return tokenId;
+  // const result = await nftDetails.insertOne({
+  //   owner: addressTo,
+  //   tokenID: tokenId,
+  //   tokenURI: tokenURI,
+  //   tokenAddress: contractAddress,
+  //   txHash: txHash.transactionHash,
+  // });
+  // console.log(result);
+  // return tokenId;
+  return tx;
 };
 
 module.exports = { mintNFT };
