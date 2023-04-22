@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const RSnftDetails = mongoose.Schema({
+    tokenHash: {
+        type: String,
+        required: true,
+    },
     owner: {
         type: String,
         required: true

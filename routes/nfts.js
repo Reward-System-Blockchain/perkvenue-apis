@@ -21,8 +21,8 @@ router.post("/mint", async (req, res) => {
     const { name, description, image, addressTo } = req.body;
   
     try {  
-      const txHash = await mintNFT(name, description, image, addressTo);
-      res.json({ txHash });
+      const tokenId = await mintNFT(name, description, image, addressTo);
+      res.status(200).json({ tokenId });
     } catch (err) {
       console.log(err);
       res.status(500).json({ message: "Internal server error" });
