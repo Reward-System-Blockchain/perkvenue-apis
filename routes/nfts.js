@@ -37,6 +37,7 @@ router.get("/mint", async (req, res) => {
   try {
     const nfts = await nftDetails.find( { 
       $or: [
+        {},
         { _id: query.id },
         { owner: query.owner },
         { tokenAddress: query.tokenAddress },
