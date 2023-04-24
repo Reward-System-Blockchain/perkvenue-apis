@@ -72,6 +72,24 @@ router.get("/mint", async (req, res) => {
     if (query.tokenId) {
       queryObject.tokenID = query.tokenId;
     }
+    if (query.priceGreaterThan) {
+      queryObject.price = { $gt: query.priceGreaterThan };
+    }
+    if (query.priceLessThan) {
+      queryObject.price = { $lt: query.priceLessThan };
+    }
+    if(query.priceGreaterThan && query.priceLessThan){
+      queryObject.price = { $gt: query.priceGreaterThan, $lt: query.priceLessThan };
+    }
+    if (query.timestampGreaterThan) {
+      queryObject.timestamp = { $gt: query.timestampGreaterThan };
+    }
+    if (query.timestampLessThan) {
+      queryObject.timestamp = { $lt: query.timestampLessThan };
+    }
+    if(query.timestampGreaterThan && query.timestampLessThan){
+      queryObject.timestamp = { $gt: query.timestampGreaterThan, $lt: query.timestampLessThan };
+    }
     {
       const nfts = await nftDetails.find(queryObject);
       res.status(200).json(nfts);
