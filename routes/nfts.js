@@ -30,7 +30,7 @@ router.post("/mint", async (req, res) => {
 });
 
 // GET
-router.get("/mint", async (req, res) => {
+router.get("/details", async (req, res) => {
   const query = req.query;
   console.log(query);
   queryObject={};
