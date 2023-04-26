@@ -25,9 +25,22 @@ router.post("/create", async (req, res) => {
     }
 });
 
-// POST - Get Token Details from Token Address
-router.post("/getDetails", async (req, res) => {
-  const { tokenAddress } = req.body;
+// // POST - Get Token Details from Token Address
+// router.post("/getDetails", async (req, res) => {
+//   const { tokenAddress } = req.body;
+
+//   try {
+//     const tokenDetails = await getTokenDetails(tokenAddress);
+//     res.status(200).json({ tokenDetails });
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// });
+
+// GET - Get Token Details from Token Address
+router.get("/getDetails/:tokenAddress", async (req, res) => {
+  const { tokenAddress } = req.params;
 
   try {
     const tokenDetails = await getTokenDetails(tokenAddress);
@@ -37,6 +50,7 @@ router.post("/getDetails", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 
 // POST - Mint tokens
