@@ -5,6 +5,7 @@ const { getAllTokens } = require("../blockchain/getAllTokens");
 const { getTokenDetails } = require("../blockchain/getTokenDetails");
 const { mintTokens } = require("../blockchain/mintTokens");
 const { burnTokens } = require("../blockchain/burnTokens");
+const {getUserBalance} = require("../blockchain/getUserBalance");
 
 
 
@@ -51,6 +52,19 @@ router.get("/getDetails/:tokenAddress", async (req, res) => {
   }
 });
 
+
+// GET - Get User Balance from Token Address
+router.get("/getDetails/:tokenAddress/:userAddress", async (req, res) => {
+  const { tokenAddress, userAddress } = req.params;
+
+  try {
+    const userBalance = await getUserBalance(tokenAddress, userAddress);
+    res.status(200).json({ userBalance });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
 
 // POST - Mint tokens
