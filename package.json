@@ -1,12 +1,11 @@
 {
-  "name": "rest_api",
+  "name": "perkvenue_apis",
   "version": "1.0.0",
   "description": "rest api using mongoDB",
   "main": "app.js",
   "scripts": {
     "start": "nodemon app.js"
   },
-  "author": "Prashant",
   "license": "ISC",
   "dependencies": {
     "@pushprotocol/restapi": "^1.3.0",
