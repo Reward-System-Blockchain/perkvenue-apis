@@ -1,11 +1,10 @@
-// import * as PushAPI from "@pushprotocol/restapi";
 const PushAPI = require("@pushprotocol/restapi");
 
 const { ethers } = require("ethers");
 
 const PK = process.env.PUSH_PRIVATE_KEY;
 const Pkey = `0x${PK}`;
-
+const channelKey = process.env.PUSH_CHANNEL_KEY;
 const _signer = new ethers.Wallet(Pkey);
 
 const createTokenNotification = async (
@@ -16,13 +15,7 @@ const createTokenNotification = async (
   creatorAddress,
   txHash
 ) => {
-  //   const { title, message } = props;
   const address = creatorAddress;
-
-  //   const PK = process.env.PUSH_PRIVATE_KEY;
-  //   const Pkey = `0x${PK}`;
-
-  //   const _signer = new ethers.Wallet(Pkey);
 
   const tableBody = `
     Token Address: ${tokenAddress}
@@ -32,7 +25,7 @@ const createTokenNotification = async (
     Creator Address: ${creatorAddress}
     Transaction Hash: ${txHash}
   `;
-
+  try {
   const apiResponse = await PushAPI.payloads.sendNotification({
     signer: _signer,
     type: 3, // target
@@ -48,10 +41,12 @@ const createTokenNotification = async (
       img: "",
     },
     recipients: address, // recipients addresses
-    channel: "eip155:80001:0xD490fB9eee2578444CFa56D74B4afaf215EfC269", // your channel address
+    channel: channelKey, // your channel address
     env: "staging",
   });
-  console.log(apiResponse);
+ } catch (error) {
+    console.error("Error sending notification:", error);
+  }
 };
 
 const mintNFTNotification = async (
@@ -61,7 +56,7 @@ const mintNFTNotification = async (
   tokenURI,
   txHash
 ) => {
-  //   const { title, message } = props;
+
   const address = addressTo;
 
   const tableBody = `
@@ -71,7 +66,7 @@ const mintNFTNotification = async (
       Owner: ${addressTo}
       Transaction Hash: ${txHash}
     `;
-
+    try {
   const apiResponse = await PushAPI.payloads.sendNotification({
     signer: _signer,
     type: 3, // target
@@ -87,21 +82,23 @@ const mintNFTNotification = async (
       img: "",
     },
     recipients: address, // recipients addresses
-    channel: "eip155:80001:0xD490fB9eee2578444CFa56D74B4afaf215EfC269", // your channel address
+    channel: channelKey, // your channel address
     env: "staging",
   });
-  console.log(apiResponse);
+} catch (error) {
+    console.error("Error sending notification:", error);
+  }
 };
 
 const mintTokenNotification = async (tokenAddress, account, amount) => {
-    //   const { title, message } = props;
+
     const address = account;
   
     
     const tableBody = `${amount} tokens successfully minted to your account. 
     Token Address: ${tokenAddress}
     Account Address: ${account}`;
-  
+    try {
     const apiResponse = await PushAPI.payloads.sendNotification({
       signer: _signer,
       type: 3, // target
@@ -117,21 +114,24 @@ const mintTokenNotification = async (tokenAddress, account, amount) => {
         img: "",
       },
       recipients: address, // recipients addresses
-      channel: "eip155:80001:0xD490fB9eee2578444CFa56D74B4afaf215EfC269", // your channel address
+      channel: channelKey, // your channel address
       env: "staging",
     });
-    console.log(apiResponse);
+
+} catch (error) {
+    console.error("Error sending notification:", error);
+  }
   };
 
   const burnTokenNotification = async (tokenAddress, account, amount) => {
-    //   const { title, message } = props;
+
     const address = account;
   
     
     const tableBody = `${amount} tokens has been deducted from your account. 
     Token Address: ${tokenAddress}
     Account Address: ${account}`;
-  
+    try {
     const apiResponse = await PushAPI.payloads.sendNotification({
       signer: _signer,
       type: 3, // target
@@ -147,10 +147,12 @@ const mintTokenNotification = async (tokenAddress, account, amount) => {
         img: "",
       },
       recipients: address, // recipients addresses
-      channel: "eip155:80001:0xD490fB9eee2578444CFa56D74B4afaf215EfC269", // your channel address
+      channel: channelKey, // your channel address
       env: "staging",
     });
-    console.log(apiResponse);
+} catch (error) {
+        console.error("Error sending notification:", error);
+      }
   };
 
 module.exports = { createTokenNotification, mintNFTNotification, mintTokenNotification, burnTokenNotification };

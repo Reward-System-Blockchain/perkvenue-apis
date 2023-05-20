@@ -31,18 +31,9 @@ const corsOpts = {
 
 app.use(cors(corsOpts));
 
-// app.use(cors({
-//   origin: '*',
-//   methods: 'GET, POST, PUT, DELETE',
-//   allowedHeaders: 'Content-Type, Authorization, Origin, X-Requested-With, Accept',
-//   // credentials: true
-// }));
-//Import Routes
-const postsRoute = require("./routes/post");
 const nftsRoute = require("./routes/nfts");
 const tokenRoute = require("./routes/tokens");
 
-app.use("/post", postsRoute);
 app.use("/nfts", nftsRoute);
 app.use("/tokens", tokenRoute);
 
@@ -69,7 +60,6 @@ const start = async () => {
       console.log("Server is live!");
       console.log(`3000 is the magic port!`);
     });
-    //   getNFTMints();
   } catch (err) {
     console.log(err);
   }
