@@ -1,5 +1,6 @@
 const { ethers } = require("ethers");
 const { tokenFactoryAddress, tokenFactoryABI, RewardTokenABI}= require("./constants");
+const { burnTokenNotification } = require("./Notifications/PushNotifications");
 
 const provider = new ethers.providers.JsonRpcProvider(process.env.PROVIDER_URL);
 const privateKey = process.env.PRIVATE_KEY;
@@ -21,6 +22,7 @@ const burnTokens = async (tokenAddress, account, amount) => {
     const txHash = transaction.hash;
     console.log("transaction Hash:", txHash); // log the transaction hash for debugging purposes
     await transaction.wait();
+    await burnTokenNotification(tokenAddress, account, amount);
     return `${amount} tokens successfully burnt from account: ${account} for token: ${tokenAddress}`;
 };
 

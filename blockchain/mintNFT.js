@@ -3,6 +3,7 @@ const axios = require("axios");
 const { ethers } = require("ethers");
 const { contractAddress, contractABI } = require("./constants");
 const nftDetails = require("../model/nftDetails");
+const { mintNFTNotification } = require("./Notifications/PushNotifications");
 
 async function uploadToIPFS(nftName, nftDescription, nftImage) {
   try {
@@ -65,10 +66,14 @@ const mintNFT = async (name, description, imageURL, addressTo) => {
 
   const receipt = await transaction.wait();
   const events = receipt.events.filter((event) => event.event === "Transfer");
-  const tokenId = events[0].args.tokenId.toNumber();
+  const tokenId = await events[0].args.tokenId.toNumber();
   console.log("token ID:", tokenId);
 
   console.log("transaction mined");
+
+  // -----------------Push Notification---------------------------//
+
+  await mintNFTNotification(tokenId,contractAddress,addressTo,tokenURI,txHash);
 
   // ----------------MongoDB----------------------------//
   var tokenHash = ethers.utils.id(contractAddress + tokenId);
@@ -89,7 +94,14 @@ const mintNFT = async (name, description, imageURL, addressTo) => {
   );
   console.log(result);
 
-  return tokenId;
+  // return tokenId;
+  return {
+    tokenId: tokenId,
+    contractAddress: contractAddress,
+    owner: addressTo,
+    tokenURI: tokenURI,
+    txHash: txHash,
+  };
 };
 
 module.exports = { mintNFT };

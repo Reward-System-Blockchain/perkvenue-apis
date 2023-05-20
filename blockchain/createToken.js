@@ -1,6 +1,7 @@
 const { ethers } = require("ethers");
 const { tokenFactoryAddress, tokenFactoryABI, RewardTokenABI } = require("./constants");
 const rewardTokenDetails = require("../model/rewardTokenDetails");
+const { createTokenNotification } = require("./Notifications/PushNotifications");
 
 const provider = new ethers.providers.JsonRpcProvider(process.env.PROVIDER_URL);
 const privateKey = process.env.PRIVATE_KEY;
@@ -27,6 +28,10 @@ const createToken = async (creatorAddress, name, symbol) => {
   const tokenDetails = await contract.tokens(tokenId);
 //   const RewardTokenContract = new ethers.Contract(tokenDetails[1], RewardTokenABI, signer);
   // totalSupply= (await RewardTokenContract.totalSupply()).toString(),
+
+  // ------------ PUSH NOTIFICATION ------------ //
+
+  await createTokenNotification(tokenDetails[1],tokenId,name,symbol,creatorAddress,txHash);
 
   // ------------ MONGODB ------------
 
