@@ -3,7 +3,7 @@ const {
   tokenFactoryAddress,
   tokenFactoryABI,
   RewardTokenABI,
-} = require("./constants");
+} = require("./constants/constants");
 // const rewardTokenDetails = require("../model/rewardTokenDetails");
 
 const provider = new ethers.providers.JsonRpcProvider(process.env.PROVIDER_URL);

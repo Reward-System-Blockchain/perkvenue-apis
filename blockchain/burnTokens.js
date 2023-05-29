@@ -1,5 +1,5 @@
 const { ethers } = require("ethers");
-const { tokenFactoryAddress, tokenFactoryABI, RewardTokenABI}= require("./constants");
+const { tokenFactoryAddress, tokenFactoryABI, RewardTokenABI}= require("./constants/constants");
 const { burnTokenNotification } = require("./Notifications/PushNotifications");
 
 const provider = new ethers.providers.JsonRpcProvider(process.env.PROVIDER_URL);

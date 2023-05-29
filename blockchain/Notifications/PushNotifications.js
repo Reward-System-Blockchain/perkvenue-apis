@@ -49,7 +49,7 @@ const createTokenNotification = async (
   }
 };
 
-const mintNFTNotification = async (
+const quickmintNotification = async (
   tokenId,
   contractAddress,
   addressTo,
@@ -155,4 +155,42 @@ const mintTokenNotification = async (tokenAddress, account, amount) => {
       }
   };
 
-module.exports = { createTokenNotification, mintNFTNotification, mintTokenNotification, burnTokenNotification };
+  const mintFromCollectionNotification = async (tokenId,
+    contractAddress,
+    addressTo,
+    tokenURI,
+    txHash) => {
+      const address = addressTo;
+
+      const tableBody = `
+          Contract Address: ${contractAddress}
+          Token ID: ${tokenId}
+          NFT Metadata: ${tokenURI}
+          Owner: ${addressTo}
+          Transaction Hash: ${txHash}
+        `;
+        try {
+      const apiResponse = await PushAPI.payloads.sendNotification({
+        signer: _signer,
+        type: 3, // target
+        identityType: 0, // minimal payload
+        notification: {
+          title: "NFT has been minted successfully from the collection!",
+          body: tableBody,
+        },
+        payload: {
+          title: "NFT has been minted successfully from the collection!",
+          body: tableBody,
+          cta: "",
+          img: "",
+        },
+        recipients: address, // recipients addresses
+        channel: channelKey, // your channel address
+        env: "staging",
+      });
+    } catch (error) {
+        console.error("Error sending notification:", error);
+      }
+  }
+
+module.exports = { createTokenNotification, quickmintNotification, mintTokenNotification, burnTokenNotification, mintFromCollectionNotification };

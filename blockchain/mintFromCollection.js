@@ -1,9 +1,9 @@
 const { NFTStorage, File } = require("nft.storage");
 const axios = require("axios");
 const { ethers } = require("ethers");
-const { contractAddress, contractABI } = require("./constants/constants");
+const { NFTCollectionABI } = require("./constants/constants");
 const nftDetails = require("../model/nftDetails");
-const { quickmintNotification } = require("./Notifications/PushNotifications");
+const { mintFromCollectionNotification } = require("./Notifications/PushNotifications");
 
 async function uploadToIPFS(nftName, nftDescription, nftImage) {
   try {
@@ -48,9 +48,9 @@ const provider = new ethers.providers.JsonRpcProvider(
 const privateKey = process.env.PRIVATE_KEY;
 
 const signer = new ethers.Wallet(privateKey, provider);
-const contract = new ethers.Contract(contractAddress, contractABI, signer);
 
-const mintNFT = async (name, description, imageURL, addressTo) => {
+
+const mintFromCollection = async (contractAddress, name, description, imageURL, addressTo) => {
   console.log("Name:", name);
   console.log("description:", description);
   console.log("imageURL:", imageURL);
@@ -59,7 +59,9 @@ const mintNFT = async (name, description, imageURL, addressTo) => {
   const ipfsLink = await uploadToIPFS(name, description, imageURL);
   const tokenURI = ipfsLink;
 
-  const transaction = await contract.quickMint(addressTo, tokenURI);
+  const contract = new ethers.Contract(contractAddress, NFTCollectionABI, signer);
+
+  const transaction = await contract.mint(addressTo, tokenURI);
   const txHash = transaction.hash;
 
   console.log("transaction Hash:", txHash); // log the transaction hash for debugging purposes
@@ -73,7 +75,7 @@ const mintNFT = async (name, description, imageURL, addressTo) => {
 
   // -----------------Push Notification---------------------------//
 
-  await quickmintNotification(tokenId,contractAddress,addressTo,tokenURI,txHash);
+  await mintFromCollectionNotification(tokenId,contractAddress,addressTo,tokenURI,txHash);
 
   // ----------------MongoDB----------------------------//
   var tokenHash = ethers.utils.id(contractAddress + tokenId);
@@ -104,4 +106,4 @@ const mintNFT = async (name, description, imageURL, addressTo) => {
   };
 };
 
-module.exports = { mintNFT };
+module.exports = { mintFromCollection };

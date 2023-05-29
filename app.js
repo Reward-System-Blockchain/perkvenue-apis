@@ -7,7 +7,7 @@ const cors = require('cors');
 // -----------------------------------------------//
 const { NFTStorage } = require("nft.storage");
 const Web3 = require("web3");
-const { contractAddress, contractABI } = require("./blockchain/constants");
+const { contractAddress, contractABI } = require("./blockchain/constants/constants");
 const { mintNFT } = require("./blockchain/mintNFT");
 // -----------------------------------------------//
 
@@ -34,8 +34,10 @@ app.use(cors(corsOpts));
 const nftsRoute = require("./routes/nfts");
 const tokenRoute = require("./routes/tokens");
 
+
 app.use("/nfts", nftsRoute);
 app.use("/tokens", tokenRoute);
+
 
 
 

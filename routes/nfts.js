@@ -3,21 +3,81 @@ const router = express.Router();
 
 const { NFTStorage } = require("nft.storage");
 const Web3 = require("web3");
-const { contractAddress, contractABI } = require("../blockchain/constants");
+const { contractAddress, contractABI } = require("../blockchain/constants/constants");
 const { mintNFT } = require("../blockchain/mintNFT");
 const nftDetails = require("../model/nftDetails");
+const NFTcollectionDetails = require("../model/NFTcollectionDetails");
+const { deployNFTCollection } = require("../blockchain/deployNFTCollection");
+const { mintFromCollection } = require("../blockchain/mintFromCollection");
 
 router.get("/", (req, res) => {
   res.send("We are on nfts");
 });
 
-// router.options('/nfts/mint', (req, res) => {
-//   res.setHeader('Access-Control-Allow-Methods', 'POST');
-//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-//   res.status(200).send();
-// });
+
+
+//POST
+router.post("/mintFromCollection", async (req, res) => {
+  const { contractAddress, name, description, image, addressTo } = req.body;
+
+  try {
+    const nftDetails = await mintFromCollection(contractAddress, name, description, image, addressTo);
+    res.status(200).json({ nftDetails });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
 // POST
-router.post("/mint", async (req, res) => {
+router.post("/deploycollection", async (req, res) => {
+  const { name, symbol, maxSupply } = req.body;
+
+  try {
+    const contractAddress = await deployNFTCollection(name, symbol, maxSupply);
+    res.status(200).json({ contractAddress });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// get collection details
+router.get("/collectionDetails", async (req, res) => {
+  const { contractAddress, name, symbol, sort, select} =
+    req.query;
+  const queryObject = {};
+
+  if (contractAddress) {
+    queryObject.contractAddress = new RegExp(`^${contractAddress}$`, "i");
+  }
+  if (name) {
+    queryObject.name = new RegExp(`^${name}$`, "i");
+  }
+  if (symbol) {
+    queryObject.symbol = new RegExp(`^${symbol}$`, "i");
+  }
+
+  let apiData = NFTcollectionDetails.find(queryObject);
+
+  if (sort) {
+    apiData = apiData.sort(sort.replace(/,/g, ' '));
+  }
+  if (select) {
+    apiData = apiData.select(select.replace(/,/g, ' '));
+  }
+
+  console.log("NFT Collection - Query called!");
+
+  const collections = await apiData;
+  res.status(200).json({ total: collections.length, collections });
+});
+
+//---------------------------------------------------------//
+
+
+router.post("/quickmint", async (req, res) => {
   const { name, description, image, addressTo } = req.body;
 
   try {
@@ -36,21 +96,6 @@ router.get("/details", async (req, res) => {
   queryObject={};
 
   try {
-    // const nfts = await nftDetails.find( {
-    //   $or: [
-    //     {},
-    //     { _id: query.id },
-    //     { owner: query.owner },
-    //     { tokenAddress: query.tokenAddress },
-    //     { isOnSale: query.isOnSale },
-    //     { price: query.price },
-    //     { timestamp: query.timestamp },
-    //     {tokenID: query.tokenId}
-    //   ]
-    // } );
-
-    // console.log(nfts);
-    // res.status(200).json({ nfts });
     if (query.id) {
       queryObject._id = query.id;
     }

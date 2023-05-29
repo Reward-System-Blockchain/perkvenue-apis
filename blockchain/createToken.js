@@ -1,5 +1,5 @@
 const { ethers } = require("ethers");
-const { tokenFactoryAddress, tokenFactoryABI, RewardTokenABI } = require("./constants");
+const { tokenFactoryAddress, tokenFactoryABI, RewardTokenABI } = require("./constants/constants");
 const rewardTokenDetails = require("../model/rewardTokenDetails");
 const { createTokenNotification } = require("./Notifications/PushNotifications");
 
