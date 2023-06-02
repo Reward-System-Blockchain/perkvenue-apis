@@ -1,6 +1,7 @@
 const contractAddress="0x44DE3A8078870068F01F019EFe42ba7525f64E50"
 // const tokenAddress="0x80ed55e8Fee96Ed3ceF08771C28c0cAf7272135D"
-const tokenFactoryAddress="0xa835d42bb5556b266939A8ca0194219A89C34b0d"
+// const tokenFactoryAddress="0xa835d42bb5556b266939A8ca0194219A89C34b0d"
+const tokenFactoryAddress="0x9C488A6644221494f9e33C58b64299cb4760ECc3"
 const contractABI=[
 	{
 		"inputs": [],
