@@ -93,14 +93,14 @@ router.post("/quickmint", async (req, res) => {
 router.get("/details", async (req, res) => {
   const query = req.query;
   console.log(query);
-  queryObject={};
+  queryObject = {};
 
   try {
     if (query.id) {
       queryObject._id = query.id;
     }
     if (query.owner) {
-      queryObject.owner = query.owner;
+      queryObject.owner = { $regex: new RegExp(query.owner, "i") };
     }
     if (query.tokenAddress) {
       queryObject.tokenAddress = query.tokenAddress;
@@ -123,7 +123,7 @@ router.get("/details", async (req, res) => {
     if (query.priceLessThan) {
       queryObject.price = { $lt: query.priceLessThan };
     }
-    if(query.priceGreaterThan && query.priceLessThan){
+    if (query.priceGreaterThan && query.priceLessThan) {
       queryObject.price = { $gt: query.priceGreaterThan, $lt: query.priceLessThan };
     }
     if (query.timestampGreaterThan) {
@@ -132,17 +132,17 @@ router.get("/details", async (req, res) => {
     if (query.timestampLessThan) {
       queryObject.timestamp = { $lt: query.timestampLessThan };
     }
-    if(query.timestampGreaterThan && query.timestampLessThan){
+    if (query.timestampGreaterThan && query.timestampLessThan) {
       queryObject.timestamp = { $gt: query.timestampGreaterThan, $lt: query.timestampLessThan };
     }
-    {
-      const nfts = await nftDetails.find(queryObject);
-      res.status(200).json(nfts);
-    }
+
+    const nfts = await nftDetails.find(queryObject);
+    res.status(200).json(nfts);
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 module.exports = router;
