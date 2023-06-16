@@ -5,13 +5,9 @@ require("dotenv/config");
 const bodyParser = require("body-parser");
 const cors = require('cors');
 // -----------------------------------------------//
-const { NFTStorage } = require("nft.storage");
-const Web3 = require("web3");
-const { contractAddress, contractABI } = require("./blockchain/constants/constants");
-const { mintNFT } = require("./blockchain/mintNFT");
-// -----------------------------------------------//
 
-// const nftDetails = require("./model/nftDetails");
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swaggerConfig.js');
 
 //Middle ware
 app.use(bodyParser.json());
@@ -37,9 +33,7 @@ const tokenRoute = require("./routes/tokens");
 
 app.use("/nfts", nftsRoute);
 app.use("/tokens", tokenRoute);
-
-
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 //Routes
 app.get("/", (req, res) => {
