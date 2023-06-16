@@ -33,7 +33,7 @@ const tokenRoute = require("./routes/tokens");
 
 app.use("/nfts", nftsRoute);
 app.use("/tokens", tokenRoute);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 //Routes
 app.get("/", (req, res) => {
